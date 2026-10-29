@@ -1,0 +1,199 @@
+{
+  "formTitle": "Structured Self-Reflection as a Professional Development Strategy for Managing Impostor Feelings among Novice Korean Tutors in Hanoi",
+  "source": "https://docs.google.com/forms/d/e/1FAIpQLSdClsnVFzQEXCzTirtOhNlLQegqI2xyd6a58Tmx122usZgN6A/viewform",
+  "questionCount": 22,
+  "sections": [
+    {
+      "title": "SECTION A. PARTICIPANT SCREENING",
+      "questions": [
+        {
+          "id": 1332938138,
+          "question": "How old are you?????",
+          "type": "multiple_choice",
+          "required": true,
+          "options": ["18-25", "26-35", "36+", "Other / Mục khác"]
+        },
+        {
+          "id": 92693236,
+          "question": "Are you applying structure self-development method to managing impostor feelings?",
+          "type": "multiple_choice",
+          "required": true,
+          "options": ["Yes"]
+        },
+        {
+          "id": 871147679,
+          "question": "How long have you been working as a Korean language tutor?",
+          "type": "multiple_choice",
+          "required": true,
+          "options": [
+            "1- less than 3 months",
+            "3- less than 6 months",
+            "6- less than 12 months",
+            "12-24 months",
+            "Other / Mục khác"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "SECTION B. PROFESSIONAL BACKGROUND",
+      "questions": [
+        {
+          "id": 1329048592,
+          "question": "What is your primary field of study?",
+          "type": "multiple_choice",
+          "required": true,
+          "options": ["Korean Language", "Korean Education", "Other / Mục khác"]
+        },
+        {
+          "id": 1217342313,
+          "question": "What is the highest TOPIK level you have achieved?",
+          "type": "multiple_choice",
+          "required": true,
+          "options": [
+            "I have not obtained a TOPIK certificate",
+            "TOPIK Level 1–2",
+            "TOPIK Level 3–4",
+            "TOPIK Level 5–6",
+            "Other / Mục khác"
+          ]
+        },
+        {
+          "id": 1813820391,
+          "question": "On average, how many hours per week do you spend tutoring Korean?",
+          "type": "multiple_choice",
+          "required": true,
+          "options": [
+            "Less than 5 hours",
+            "5 to less than 10 hours",
+            "10 to less than 15 hours",
+            "15 hours or more",
+            "Other / Mục khác"
+          ]
+        },
+        {
+          "id": 2100801873,
+          "question": "Have you ever participated in any formal course or training program related to Korean language teaching methods?",
+          "type": "multiple_choice",
+          "required": true,
+          "options": ["Yes", "No"]
+        }
+      ]
+    },
+    {
+      "title": "SECTION C. IMPOSTOR-RELATED FEELINGS",
+      "type": "multiple_choice_grid",
+      "sharedOptions": ["Not at all", "Slightly", "Moderately", "Very", "Extremely"],
+      "questions": [
+        {
+          "id": 2126309867,
+          "question": "IF1. I sometimes worry that others will discover aspects of myself that I try to hide.",
+          "required": true
+        },
+        {
+          "id": 218620959,
+          "question": "IF2. I occasionally feel that I am presenting myself as more capable than I really am.",
+          "required": true
+        },
+        {
+          "id": 1002191970,
+          "question": "IF3. I worry that people whose opinions matter to me will realise that my abilities do not meet their expectations.",
+          "required": true
+        },
+        {
+          "id": 963052256,
+          "question": "IF4. In certain situations, I feel as though I do not genuinely deserve the recognition I receive.",
+          "required": true
+        },
+        {
+          "id": 30428718,
+          "question": "IF5. I sometimes fear that others will recognise gaps in my knowledge or abilities.",
+          "required": true
+        },
+        {
+          "id": 971184848,
+          "question": "IF6. In some situations, I feel that the competent image I present to others does not reflect how I see myself.",
+          "required": true
+        },
+        {
+          "id": 592663823,
+          "question": "IF7. There are situations in which I feel that I am pretending to be more competent than I actually am.",
+          "required": true
+        }
+      ]
+    },
+    {
+      "title": "SECTION D. PROFESSIONAL SELF-DEVELOPMENT PRACTICES",
+      "questions": [
+        {
+          "id": 1043377574,
+          "question": "SR1. During the past four weeks, how many times have you intentionally reviewed a tutoring experience using a planned sequence of guiding questions or reflection steps?",
+          "type": "multiple_choice",
+          "required": true,
+          "options": ["Once", "2-3 times", "4-6 times", "7 times or more"]
+        },
+        {
+          "id": 407039047,
+          "question": "SR2. I describe what happened in a particular Korean tutoring session before judging how it went.",
+          "type": "multiple_choice_grid_row",
+          "required": true,
+          "options": ["Hardly ever", "Sometimes", "Fairly often", "Often"]
+        },
+        {
+          "id": 1941338973,
+          "question": "SR3. I identify the thoughts and feelings I experienced during that tutoring session.",
+          "type": "multiple_choice_grid_row",
+          "required": true,
+          "options": ["Hardly ever", "Sometimes", "Fairly often", "Often"]
+        },
+        {
+          "id": 1154665634,
+          "question": "SR4. I consider both the successful and less successful aspects of the tutoring session.",
+          "type": "multiple_choice_grid_row",
+          "required": true,
+          "options": ["Hardly ever", "Sometimes", "Fairly often", "Often"]
+        },
+        {
+          "id": 1484668873,
+          "question": "SR5. I examine why teaching difficulties or unexpected outcomes occurred.",
+          "type": "multiple_choice_grid_row",
+          "required": true,
+          "options": ["Hardly ever", "Sometimes", "Fairly often", "Often"]
+        },
+        {
+          "id": 1798183671,
+          "question": "SR6. I identify what I learned and what I could have done differently.",
+          "type": "multiple_choice_grid_row",
+          "required": true,
+          "options": ["Hardly ever", "Sometimes", "Fairly often", "Often"]
+        },
+        {
+          "id": 761770663,
+          "question": "SR7. I decide on specific changes to make in a future tutoring session.",
+          "type": "multiple_choice_grid_row",
+          "required": true,
+          "options": ["Hardly ever", "Sometimes", "Fairly often", "Often"]
+        }
+      ]
+    },
+    {
+      "title": "SECTION E. Perceived Usefulness for Managing Impostor Feelings",
+      "questions": [
+        {
+          "id": 1118297679,
+          "question": "Based on your own experience, how helpful has structured self-reflection been in managing these feelings?",
+          "type": "multiple_choice",
+          "required": true,
+          "options": [
+            "Extremely helpful",
+            "Slightly helpful",
+            "Moderately helpful",
+            "Very helpful",
+            "Not sure",
+            "Not at all helpful"
+          ]
+        }
+      ]
+    }
+  ]
+}

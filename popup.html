@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Random Form Filler</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main>
+      <div class="brand">
+        <div class="brand__icon" aria-hidden="true">🎲</div>
+        <div>
+          <h1>Random Form Filler</h1>
+          <p>Điền và gửi nhiều lượt có kiểm soát</p>
+        </div>
+      </div>
+
+      <section class="settings" aria-label="Tùy chọn">
+        <label>
+          <input id="preserveAnswered" type="checkbox" checked />
+          <span>Giữ các câu đã trả lời</span>
+        </label>
+        <label>
+          <input id="avoidOther" type="checkbox" checked />
+          <span>Tránh chọn “Mục khác”</span>
+        </label>
+        <label>
+          <input id="fillText" type="checkbox" />
+          <span>Điền cả ô văn bản</span>
+        </label>
+        <label class="settings__distribution">
+          <input id="useDesiredPercentages" type="checkbox" />
+          <span>Điền theo tỷ lệ phần trăm</span>
+        </label>
+      </section>
+
+      <section class="batch" aria-label="Số lượt kiểm thử">
+        <label for="runCount">Số form cần điền và gửi</label>
+        <div class="batch__control">
+          <button id="decreaseCount" class="stepper" type="button" aria-label="Giảm số lượt">−</button>
+          <input id="runCount" type="number" min="1" max="50" step="1" value="1" inputmode="numeric" />
+          <button id="increaseCount" class="stepper" type="button" aria-label="Tăng số lượt">+</button>
+        </div>
+        <span>Tối đa 50 lượt cho mỗi lần chạy.</span>
+      </section>
+
+      <div class="actions">
+        <button id="fillMultipleAndSubmit" class="button button--primary" type="button">
+          Điền và gửi 1 form
+        </button>
+        <button id="stop" class="button button--quiet" type="button" disabled>
+          Dừng tự động
+        </button>
+      </div>
+
+      <p id="status" class="status" role="status" aria-live="polite">
+        Tiến trình sẽ hiển thị ở góc trên bên trái trang Google Form.
+      </p>
+      <p class="note">Chỉ gửi dữ liệu tới biểu mẫu bạn được phép kiểm thử.</p>
+      <p id="version" class="version"></p>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>

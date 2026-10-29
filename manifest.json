@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Random Form Filler",
+  "version": "1.6.0",
+  "description": "Điền và gửi nhiều lượt Google Form ngẫu nhiên hoặc theo tỷ lệ phần trăm mong muốn.",
+  "permissions": ["activeTab", "storage", "scripting"],
+  "host_permissions": [
+    "https://docs.google.com/forms/d/e/1FAIpQLSdClsnVFzQEXCzTirtOhNlLQegqI2xyd6a58Tmx122usZgN6A/*",
+    "https://docs.google.com/forms/u/*/d/e/1FAIpQLSdClsnVFzQEXCzTirtOhNlLQegqI2xyd6a58Tmx122usZgN6A/*"
+  ],
+  "action": {
+    "default_title": "Random Form Filler",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://docs.google.com/forms/d/e/1FAIpQLSdClsnVFzQEXCzTirtOhNlLQegqI2xyd6a58Tmx122usZgN6A/*",
+        "https://docs.google.com/forms/u/*/d/e/1FAIpQLSdClsnVFzQEXCzTirtOhNlLQegqI2xyd6a58Tmx122usZgN6A/*"
+      ],
+      "js": ["desired-distributions.js", "distribution-utils.js", "content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}
