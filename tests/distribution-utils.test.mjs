@@ -29,6 +29,10 @@ assert.deepEqual(
   [35, 35, 30, 0]
 );
 assert.deepEqual(
+  globalThis.RANDOM_FORM_DESIRED_DISTRIBUTIONS[2].options.map((option) => option.percent),
+  [80, 20]
+);
+assert.deepEqual(
   globalThis.RANDOM_FORM_DESIRED_DISTRIBUTIONS[7].options.map((option) => option.percent),
   [0, 15, 30, 25, 30]
 );

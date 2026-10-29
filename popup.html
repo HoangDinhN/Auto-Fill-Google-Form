@@ -35,6 +35,30 @@
         </label>
       </section>
 
+      <section class="distribution" aria-label="Nguồn tỷ lệ phần trăm">
+        <div class="distribution__heading">
+          <span>Tỷ lệ đáp án</span>
+          <span id="distributionBadge" class="distribution__badge">Mặc định</span>
+        </div>
+        <p id="distributionSource" class="distribution__source">
+          Đang dùng tỷ lệ mặc định của extension.
+        </p>
+        <div class="distribution__actions">
+          <button id="importWord" class="button button--outline" type="button">
+            Trích xuất từ Word
+          </button>
+          <button id="resetDistribution" class="button button--link" type="button" disabled>
+            Khôi phục mặc định
+          </button>
+        </div>
+        <input
+          id="wordFile"
+          type="file"
+          accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          hidden
+        />
+      </section>
+
       <section class="batch" aria-label="Số lượt kiểm thử">
         <label for="runCount">Số form cần điền và gửi</label>
         <div class="batch__control">
@@ -60,6 +84,9 @@
       <p class="note">Chỉ gửi dữ liệu tới biểu mẫu bạn được phép kiểm thử.</p>
       <p id="version" class="version"></p>
     </main>
+    <script src="third_party/jszip.min.js"></script>
+    <script src="desired-distributions.js"></script>
+    <script src="word-import.js"></script>
     <script src="popup.js"></script>
   </body>
 </html>

@@ -7,6 +7,7 @@
   const LEGACY_AUTO_KEY = "randomFormFillerAuto";
   const ACTIVE_RUN_KEY = "randomFormFillerActiveRun";
   const LAST_RUN_KEY = "randomFormFillerLastRun";
+  const CUSTOM_DISTRIBUTIONS_KEY = "randomFormFillerDesiredDistributions";
   const LOCAL_RUN_TOKEN_KEY = "randomFormFillerRunToken";
   const MAX_RUN_AGE_MS = 60 * 60 * 1000;
   const FORM_ID = "1FAIpQLSdClsnVFzQEXCzTirtOhNlLQegqI2xyd6a58Tmx122usZgN6A";
@@ -31,6 +32,7 @@
   let lastAutoPageSignature = null;
   let mutationResumeTimer;
   let progressHideTimer;
+  let activeDesiredDistributions = null;
 
   const sleep = (milliseconds) =>
     new Promise((resolve) => window.setTimeout(resolve, milliseconds));
@@ -75,7 +77,10 @@
   }
 
   function findDesiredDistribution(group) {
-    const distributions = globalThis.RANDOM_FORM_DESIRED_DISTRIBUTIONS || [];
+    const distributions =
+      activeDesiredDistributions ||
+      globalThis.RANDOM_FORM_DESIRED_DISTRIBUTIONS ||
+      [];
     if (!distributions.length) return null;
 
     const questionRoot = group.closest('[role="listitem"]');
@@ -122,6 +127,22 @@
       }
     }
     return null;
+  }
+
+  async function loadDesiredDistributions(useDesiredPercentages) {
+    const defaults = globalThis.RANDOM_FORM_DESIRED_DISTRIBUTIONS || [];
+    activeDesiredDistributions = defaults;
+    if (!useDesiredPercentages) return;
+
+    const stored = await chrome.storage.local.get(CUSTOM_DISTRIBUTIONS_KEY);
+    const custom = stored[CUSTOM_DISTRIBUTIONS_KEY];
+    if (
+      custom?.source === "word" &&
+      Array.isArray(custom.distributions) &&
+      custom.distributions.length === defaults.length
+    ) {
+      activeDesiredDistributions = custom.distributions;
+    }
   }
 
   function optionMatchesLabel(element, label) {
@@ -452,6 +473,7 @@
 
   async function fillCurrentPage(rawOptions = {}, run = null) {
     const options = { ...DEFAULT_OPTIONS, ...rawOptions };
+    await loadDesiredDistributions(options.useDesiredPercentages);
     const radioCount = fillRadioGroups(options, run);
     const checkboxCount = fillCheckboxGroups(options);
     const dropdownCount = await fillDropdowns(options);

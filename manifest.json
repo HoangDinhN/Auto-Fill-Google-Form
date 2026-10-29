@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Random Form Filler",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Điền và gửi nhiều lượt Google Form ngẫu nhiên hoặc theo tỷ lệ phần trăm mong muốn.",
   "permissions": ["activeTab", "storage", "scripting"],
   "host_permissions": [

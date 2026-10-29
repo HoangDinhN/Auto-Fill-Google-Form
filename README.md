@@ -13,6 +13,9 @@ Chrome extension điền đáp án ngẫu nhiên cho Google Form đã cấu hìn
   trước khi bắt đầu.
 - Có hai chế độ chọn đáp án: ngẫu nhiên hoàn toàn hoặc theo tỷ lệ phần trăm đã
   nhập trong file Word. Bật chế độ thứ hai bằng ô **Điền theo tỷ lệ phần trăm**.
+- Tỷ lệ tích hợp sẵn luôn là cấu hình mặc định. Có thể bấm **Trích xuất từ
+  Word** để nhập một cấu hình tạm thời mà không cần Python hoặc tải lại
+  extension; bấm **Khôi phục mặc định** để quay về cấu hình ban đầu.
 - Chế độ tỷ lệ lập lịch đáp án cho toàn bộ `n` lượt để kết quả tổng hợp gần tỷ
   lệ mục tiêu nhất. Với `n = 1`, chọn đáp án có tỷ lệ cao nhất; với `n = 2`, ưu
   tiên hai đáp án có tỷ lệ dương cao nhất.
@@ -37,7 +40,9 @@ lại với trang ở lần bấm đầu tiên; thông thường bạn không c�
 - Nhập số lượt vào ô **Số form cần điền và gửi**, sau đó bấm nút chính để
   tự động điền, gửi và bắt đầu phản hồi tiếp theo.
 - Nếu muốn dùng các tỷ lệ từ file Word, tích **Điền theo tỷ lệ phần trăm** trước
-  khi bắt đầu. Bỏ tích để quay lại chế độ chọn ngẫu nhiên.
+  khi bắt đầu. Extension dùng tỷ lệ mặc định cho đến khi bạn bấm **Trích xuất
+  từ Word** và chọn một file `.docx` hợp lệ. Bỏ tích để quay lại chế độ chọn
+  ngẫu nhiên.
 - Theo dõi số form đã hoàn tất và giai đoạn đang chạy trên bảng tiến trình độc
   lập trong khoảng trống bên trái biểu mẫu.
 - Sau mỗi lần gửi, background service worker trực tiếp mở lại trang đầu của
@@ -58,7 +63,12 @@ Extension được thiết kế để kiểm thử biểu mẫu. Không dùng đ
 
 ## Cập nhật tỷ lệ từ file Word
 
-Sau khi sửa các con số phần trăm trong `Google_Form_Questions_and_Answer_Choices.docx`,
-chạy `build_desired_distributions.py` bằng Python đi kèm workspace để tạo lại
-`desired-distributions.js`. Script sẽ dừng nếu thiếu tỷ lệ hoặc tổng của bất kỳ
-câu nào khác 100%.
+1. Sửa và lưu các con số phần trăm trong file Word theo đúng mẫu.
+2. Mở popup extension và bấm **Trích xuất từ Word**.
+3. Chọn file `.docx`. Extension sẽ kiểm tra đủ số câu, đủ số đáp án và tổng tỷ
+   lệ của từng câu phải bằng 100%.
+4. Cấu hình nhập từ Word được lưu trong Chrome và dùng cho các lần chạy tiếp
+   theo. Không cần Python hoặc Reload extension.
+
+Nút **Khôi phục mặc định** xóa cấu hình đã nhập và dùng lại tỷ lệ tích hợp sẵn
+trong extension.

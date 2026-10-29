@@ -9,10 +9,18 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Inches, Pt, RGBColor
 
+from build_desired_distributions import (
+    DOCX_PATH as FILLED_PERCENTAGES_SOURCE,
+    build_distributions,
+    extract_percentages,
+    flatten_questions,
+)
+
 
 ROOT = Path(__file__).resolve().parent
 SOURCE = ROOT / "form-questions.json"
-OUTPUT = ROOT / "Google_Form_Questions_and_Answer_Choices.docx"
+OUTPUT = ROOT / "Google_Form_Questions_and_Answer_Choices_Current.docx"
+FALLBACK_OUTPUT = ROOT / "Google_Form_Questions_and_Answer_Choices_Updated.docx"
 
 FONT = "Aptos"
 BLACK = "000000"
@@ -156,7 +164,13 @@ def add_section_heading(doc, text):
     return paragraph
 
 
-def add_question(doc, number, question, options=None, required=True):
+def format_percentage(value):
+    return f"{value:g}"
+
+
+def add_question(
+    doc, number, question, options=None, required=True, percentages=None
+):
     paragraph = doc.add_paragraph()
     paragraph.paragraph_format.space_before = Pt(8)
     paragraph.paragraph_format.space_after = Pt(3)
@@ -168,7 +182,7 @@ def add_question(doc, number, question, options=None, required=True):
         set_run_font(marker, size=8.5, italic=True, color=MUTED)
 
     option_paragraphs = []
-    for option in options or []:
+    for option_index, option in enumerate(options or []):
         option_paragraph = doc.add_paragraph()
         option_paragraph.paragraph_format.left_indent = Inches(0.24)
         option_paragraph.paragraph_format.first_line_indent = Inches(-0.02)
@@ -180,7 +194,12 @@ def add_question(doc, number, question, options=None, required=True):
         set_run_font(circle, name="Segoe UI Symbol", size=10.5)
         text = option_paragraph.add_run(option)
         set_run_font(text, size=10.5)
-        percentage = option_paragraph.add_run("\t________ %")
+        percentage_text = (
+            format_percentage(percentages[option_index])
+            if percentages is not None
+            else "________"
+        )
+        percentage = option_paragraph.add_run(f"\t{percentage_text} %")
         set_run_font(percentage, size=10.5, bold=True)
         option_paragraphs.append(option_paragraph)
 
@@ -190,7 +209,7 @@ def add_question(doc, number, question, options=None, required=True):
             option_paragraph.paragraph_format.keep_with_next = True
 
 
-def add_percentage_scale(doc, options):
+def add_percentage_scale(doc, options, percentages=None):
     table = doc.add_table(rows=1, cols=len(options))
     table.alignment = WD_TABLE_ALIGNMENT.CENTER
     table.autofit = False
@@ -212,12 +231,25 @@ def add_percentage_scale(doc, options):
         percentage_paragraph = cell.add_paragraph()
         percentage_paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
         percentage_paragraph.paragraph_format.space_after = Pt(0)
-        percentage_run = percentage_paragraph.add_run("________ %")
+        percentage_text = (
+            format_percentage(percentages[index])
+            if percentages is not None
+            else "________"
+        )
+        percentage_run = percentage_paragraph.add_run(f"{percentage_text} %")
         set_run_font(percentage_run, size=10.2, bold=True)
     return table
 
 
 def build_document(data):
+    distributions = build_distributions(
+        flatten_questions(data), extract_percentages(FILLED_PERCENTAGES_SOURCE)
+    )
+    percentages_by_question = {
+        item["question"]: [option["percent"] for option in item["options"]]
+        for item in distributions
+    }
+
     doc = Document()
     section = doc.sections[0]
     section.page_width = Inches(8.5)
@@ -239,7 +271,7 @@ def build_document(data):
     intro = doc.add_paragraph()
     intro.paragraph_format.space_after = Pt(5)
     intro_run = intro.add_run(
-        "This document contains all 22 required questions and answer choices from the source Google Form. Enter a percentage beside every answer choice; the percentages for each question should total 100%."
+        f"This document contains all {data['questionCount']} required questions and answer choices from the source Google Form. Enter a percentage beside every answer choice; the percentages for each question should total 100%."
     )
     set_run_font(intro_run, size=10.5)
 
@@ -252,26 +284,39 @@ def build_document(data):
 
     number = 1
     for section_data in data["sections"]:
-        if section_data["title"].startswith("SECTION D"):
-            doc.add_page_break()
         add_section_heading(doc, section_data["title"])
         questions = section_data["questions"]
 
         if section_data.get("type") == "multiple_choice_grid":
             for question in questions:
-                add_question(doc, number, question["question"], required=question["required"])
-                add_percentage_scale(doc, section_data["sharedOptions"])
+                percentages = percentages_by_question[question["question"]]
+                add_question(
+                    doc, number, question["question"], required=question["required"]
+                )
+                add_percentage_scale(
+                    doc, section_data["sharedOptions"], percentages=percentages
+                )
                 number += 1
             continue
 
         if section_data["title"].startswith("SECTION D"):
             first = questions[0]
-            add_question(doc, number, first["question"], first.get("options"), first["required"])
+            add_question(
+                doc,
+                number,
+                first["question"],
+                first.get("options"),
+                first["required"],
+                percentages_by_question[first["question"]],
+            )
             number += 1
             shared = questions[1].get("options", [])
             for question in questions[1:]:
-                add_question(doc, number, question["question"], required=question["required"])
-                add_percentage_scale(doc, shared)
+                percentages = percentages_by_question[question["question"]]
+                add_question(
+                    doc, number, question["question"], required=question["required"]
+                )
+                add_percentage_scale(doc, shared, percentages=percentages)
                 number += 1
             continue
 
@@ -282,6 +327,7 @@ def build_document(data):
                 question["question"],
                 question.get("options"),
                 question["required"],
+                percentages_by_question[question["question"]],
             )
             number += 1
 
@@ -293,11 +339,16 @@ def build_document(data):
     core.subject = "Question and answer choice reference"
     core.author = ""
     core.keywords = "Google Forms, questionnaire, answer choices"
-    doc.save(OUTPUT)
+    try:
+        doc.save(OUTPUT)
+        return OUTPUT
+    except PermissionError:
+        doc.save(FALLBACK_OUTPUT)
+        return FALLBACK_OUTPUT
 
 
 if __name__ == "__main__":
     with SOURCE.open("r", encoding="utf-8") as stream:
         form_data = json.load(stream)
-    build_document(form_data)
-    print(OUTPUT.name)
+    output_path = build_document(form_data)
+    print(output_path.name)

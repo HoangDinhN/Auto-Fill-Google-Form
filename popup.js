@@ -7,11 +7,18 @@ const DEFAULT_OPTIONS = {
 
 const ACTIVE_RUN_KEY = "randomFormFillerActiveRun";
 const LAST_RUN_KEY = "randomFormFillerLastRun";
+const CUSTOM_DISTRIBUTIONS_KEY = "randomFormFillerDesiredDistributions";
+const MAX_WORD_FILE_BYTES = 10 * 1024 * 1024;
 const optionIds = Object.keys(DEFAULT_OPTIONS);
 const statusElement = document.querySelector("#status");
 const runCountElement = document.querySelector("#runCount");
 const startButton = document.querySelector("#fillMultipleAndSubmit");
 const stopButton = document.querySelector("#stop");
+const importWordButton = document.querySelector("#importWord");
+const resetDistributionButton = document.querySelector("#resetDistribution");
+const wordFileElement = document.querySelector("#wordFile");
+const distributionBadge = document.querySelector("#distributionBadge");
+const distributionSource = document.querySelector("#distributionSource");
 let activeRun = null;
 
 document.querySelector("#version").textContent =
@@ -55,9 +62,56 @@ function setRunControls(isRunning) {
   runCountElement.disabled = isRunning;
   document.querySelector("#decreaseCount").disabled = isRunning;
   document.querySelector("#increaseCount").disabled = isRunning;
+  importWordButton.disabled = isRunning;
+  if (isRunning) resetDistributionButton.disabled = true;
   optionIds.forEach((id) => {
     document.querySelector(`#${id}`).disabled = isRunning;
   });
+  if (!isRunning) void refreshDistributionSource();
+}
+
+function renderDistributionSource(configuration) {
+  const isWordSource =
+    configuration?.source === "word" && Array.isArray(configuration.distributions);
+  distributionBadge.textContent = isWordSource ? "Từ Word" : "Mặc định";
+  distributionBadge.dataset.source = isWordSource ? "word" : "default";
+  distributionSource.textContent = isWordSource
+    ? `Đã nhập ${configuration.distributions.length} câu từ ${configuration.fileName}.`
+    : "Đang dùng tỷ lệ mặc định của extension.";
+  resetDistributionButton.disabled = Boolean(activeRun) || !isWordSource;
+}
+
+async function refreshDistributionSource() {
+  const stored = await chrome.storage.local.get(CUSTOM_DISTRIBUTIONS_KEY);
+  renderDistributionSource(stored[CUSTOM_DISTRIBUTIONS_KEY] || null);
+}
+
+async function importWordFile(file) {
+  if (!file) return;
+  if (!file.name.toLocaleLowerCase("vi").endsWith(".docx")) {
+    throw new Error("Vui lòng chọn file Word có đuôi .docx.");
+  }
+  if (file.size > MAX_WORD_FILE_BYTES) {
+    throw new Error("File Word vượt quá giới hạn 10 MB.");
+  }
+
+  const defaults = globalThis.RANDOM_FORM_DESIRED_DISTRIBUTIONS || [];
+  const distributions = await globalThis.RandomFormWordImport.parseDocx(
+    await file.arrayBuffer(),
+    defaults
+  );
+  const configuration = {
+    source: "word",
+    fileName: file.name,
+    importedAt: Date.now(),
+    distributions
+  };
+  await chrome.storage.local.set({ [CUSTOM_DISTRIBUTIONS_KEY]: configuration });
+  renderDistributionSource(configuration);
+  setStatus(
+    `Đã trích xuất tỷ lệ của ${distributions.length} câu từ file Word.`,
+    "success"
+  );
 }
 
 function defaultStatusFor(run) {
@@ -100,8 +154,12 @@ async function startRun() {
     if (!tab?.id) throw new Error("Không tìm thấy tab đang mở.");
 
     const totalRuns = getRunCount();
+    const options = getOptions();
+    const modeText = options.useDesiredPercentages
+      ? "theo tỷ lệ phần trăm"
+      : "ngẫu nhiên";
     const confirmed = window.confirm(
-      `Extension sẽ điền ngẫu nhiên và gửi ${totalRuns} phản hồi tới Google Form. ` +
+      `Extension sẽ điền ${modeText} và gửi ${totalRuns} phản hồi tới Google Form. ` +
         "Chỉ tiếp tục nếu bạn được phép kiểm thử biểu mẫu này."
     );
     if (!confirmed) return;
@@ -109,7 +167,7 @@ async function startRun() {
     const response = await chrome.runtime.sendMessage({
       type: "START_AUTO_RUN",
       tabId: tab.id,
-      options: getOptions(),
+      options,
       autoSubmit: true,
       totalRuns
     });
@@ -143,6 +201,22 @@ async function stopRun() {
 
 startButton.addEventListener("click", () => void startRun());
 stopButton.addEventListener("click", () => void stopRun());
+importWordButton.addEventListener("click", () => wordFileElement.click());
+wordFileElement.addEventListener("change", () => {
+  const [file] = wordFileElement.files || [];
+  wordFileElement.value = "";
+  setStatus("Đang đọc và kiểm tra tỷ lệ trong file Word…");
+  void importWordFile(file).catch((error) => {
+    console.error("Random Form Filler Word import:", error);
+    setStatus(error.message || "Không thể đọc file Word.", "error");
+  });
+});
+resetDistributionButton.addEventListener("click", () => {
+  void chrome.storage.local.remove(CUSTOM_DISTRIBUTIONS_KEY).then(() => {
+    renderDistributionSource(null);
+    setStatus("Đã khôi phục tỷ lệ mặc định của extension.", "success");
+  });
+});
 document.querySelector("#decreaseCount").addEventListener("click", () => {
   runCountElement.value = String(Math.max(1, getRunCount() - 1));
   updateBatchButton();
@@ -161,6 +235,7 @@ optionIds.forEach((id) => {
 chrome.storage.onChanged.addListener((changes, areaName) => {
   if (areaName !== "local") return;
   if (changes[ACTIVE_RUN_KEY] || changes[LAST_RUN_KEY]) void refreshRunState();
+  if (changes[CUSTOM_DISTRIBUTIONS_KEY]) void refreshDistributionSource();
 });
 
 chrome.storage.local.get("randomFormOptions").then(({ randomFormOptions }) => {
@@ -171,4 +246,5 @@ chrome.storage.local.get("randomFormOptions").then(({ randomFormOptions }) => {
 });
 
 updateBatchButton();
+void refreshDistributionSource();
 void refreshRunState();

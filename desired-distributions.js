@@ -1,4 +1,4 @@
-// Generated from Google_Form_Questions_and_Answer_Choices.docx.
+// Generated from Google_Form_Questions_and_Answer_Choices_Current.docx.
 globalThis.RANDOM_FORM_DESIRED_DISTRIBUTIONS = Object.freeze([
   {
     "number": 1,
@@ -25,17 +25,6 @@ globalThis.RANDOM_FORM_DESIRED_DISTRIBUTIONS = Object.freeze([
   },
   {
     "number": 2,
-    "id": 92693236,
-    "question": "Are you applying structure self-development method to managing impostor feelings?",
-    "options": [
-      {
-        "label": "Yes",
-        "percent": 100.0
-      }
-    ]
-  },
-  {
-    "number": 3,
     "id": 871147679,
     "question": "How long have you been working as a Korean language tutor?",
     "options": [
@@ -58,6 +47,21 @@ globalThis.RANDOM_FORM_DESIRED_DISTRIBUTIONS = Object.freeze([
       {
         "label": "Other / Mục khác",
         "percent": 0.0
+      }
+    ]
+  },
+  {
+    "number": 3,
+    "id": 92693236,
+    "question": "Are you applying structure self-development method to managing impostor feelings?",
+    "options": [
+      {
+        "label": "Yes",
+        "percent": 80.0
+      },
+      {
+        "label": "No",
+        "percent": 20.0
       }
     ]
   },

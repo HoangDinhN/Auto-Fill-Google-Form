@@ -14,13 +14,6 @@
           "options": ["18-25", "26-35", "36+", "Other / Mục khác"]
         },
         {
-          "id": 92693236,
-          "question": "Are you applying structure self-development method to managing impostor feelings?",
-          "type": "multiple_choice",
-          "required": true,
-          "options": ["Yes"]
-        },
-        {
           "id": 871147679,
           "question": "How long have you been working as a Korean language tutor?",
           "type": "multiple_choice",
@@ -32,6 +25,13 @@
             "12-24 months",
             "Other / Mục khác"
           ]
+        },
+        {
+          "id": 92693236,
+          "question": "Are you applying structure self-development method to managing impostor feelings?",
+          "type": "multiple_choice",
+          "required": true,
+          "options": ["Yes", "No"]
         }
       ]
     },

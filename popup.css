@@ -89,6 +89,53 @@ h1 {
   font-weight: 650;
 }
 
+.distribution {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 13px;
+  border: 1px solid #e5e0f0;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.distribution__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.distribution__badge {
+  padding: 3px 7px;
+  border-radius: 999px;
+  color: #59339f;
+  background: #eee8fa;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.distribution__badge[data-source="word"] {
+  color: #17643a;
+  background: #e4f5ea;
+}
+
+.distribution__source {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: #77717f;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.distribution__actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
 .batch {
   display: grid;
   gap: 8px;
@@ -187,6 +234,21 @@ h1 {
   color: #6a3563;
   border: 1px solid #ead8e7;
   background: #f8edf5;
+}
+
+.button--outline {
+  min-height: 34px;
+  color: #59339f;
+  border: 1px solid #d8c8ee;
+  background: #faf8ff;
+}
+
+.button--link {
+  min-height: 34px;
+  padding-inline: 8px;
+  color: #6c6873;
+  background: transparent;
+  font-size: 11px;
 }
 
 .status {
